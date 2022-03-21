@@ -1,0 +1,121 @@
+
+@media (orientation:portait){
+    .artistInfo{
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media (orientation:landscape){
+    .artistInfo{
+        display: flex;
+        flex-direction: row;
+    }
+}
+/*
+.albumInfo{
+    display: flex;
+    flex-direction: row;
+
+}
+*/
+
+.artistInfoContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.artistInfoEntry{
+    display: flex;
+    flex-direction: row;
+
+    margin-left: 5px;
+    font-size: xx-large;
+}
+
+
+.artistAlbums{
+    display: flex;
+    flex-direction: column;
+}
+.artistAlbum{
+    display: flex;
+    flex-direction: column;
+    font-size: xx-large;
+
+    border: solid 5px black;
+    border-radius: 10px;
+    padding: 1em;
+    margin: 0.5em;
+}
+.artistAlbumEntry{
+    display: flex;
+    flex-direction: row;
+    font-size: xx-large;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+
+i{
+    padding: 0.2em;
+    margin-left: 0.7em;
+}
+i:hover{
+    border-radius: 20%;
+    background-color: white;
+}
+i.active{
+    background-color: greenyellow;
+}
+
+div#parent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+body{
+    background-color: #333d45;
+    color: #c0c5ce;
+}
+img{
+    object-fit: scale-down;
+    height: 30em;
+    margin: 30px;
+}
+
+.save {
+    background-color: #63937c;
+    color: greenyellow;
+    border: solid 3px greenyellow;
+
+    padding: 1em;
+    margin: 1em;
+
+    font-size: xx-large;
+}
+.save:hover{
+  background-color: #63b37c;
+}
+.save:active {
+  background-color: greenyellow;
+  color: #63937c;
+}
+
+.cancel{
+    color: red;
+    background-color: #83737c;
+    border: solid 3px red;
+
+    padding: 1em;
+    margin: 1em;
+
+    font-size: xx-large;
+}
+.cancel:hover{
+    background-color: #b3737c;
+}
+.cancel:active{
+    background-color: red;
+    color: #83737c;
+}
