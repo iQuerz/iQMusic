@@ -39,6 +39,7 @@ export class Song{
                 else
                     edit.classList.add("active");
             });
+
             if(key != "ID")
                 container.appendChild(label);
             container.appendChild(input);

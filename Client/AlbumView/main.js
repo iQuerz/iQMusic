@@ -165,6 +165,7 @@ async function getSongs(albumID){
         alert(data);
     }
 }
+
 async function getIDFromArtist(artistName){
     let response = await fetch(api + "Artists/Name/" + artistName);
     if(response.ok){
@@ -199,10 +200,14 @@ async function saveChanges(){
             alert(err.title);
             return;
         }
-        album = newAlbum;
-        artist = getArtist(album.ArtistID);
-        alert("Update successful.");
-        return;
+        else{
+            let data = response.json();
+            album = newAlbum;
+            album.ID = data.id;
+            artist = getArtist(album.ArtistID);
+            alert("Update successful.");
+            return;
+        }
     }
 
     const songDivs = document.querySelectorAll(".albumSong");
@@ -242,7 +247,6 @@ async function saveChanges(){
     album = newAlbum;
     alert("Update successful.");
 }
-
 
 async function addSong(songName){
     let song = new Song(0, songName, "https://youtube.com", "https://open.spotify.com", album.ID);

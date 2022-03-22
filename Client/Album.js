@@ -71,6 +71,12 @@ export class Album{
                 else
                     edit.classList.add("active");
             });
+
+            if(this.ID == 0){
+                input.readOnly = false;
+                edit.classList.add("active");
+            }
+
             infoDiv.appendChild(edit);
 
             albumInfoDiv.appendChild(infoDiv);

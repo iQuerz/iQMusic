@@ -1,0 +1,47 @@
+BEGIN TRANSACTION;
+INSERT INTO "__EFMigrationsHistory" ("MigrationId","ProductVersion") VALUES ('20220320133359_v1.0','5.0.15'),
+ ('20220320163545_v1.1','5.0.15'),
+ ('20220322061124_v2.0','5.0.15'),
+ ('20220322070209_v2.1','5.0.15'),
+ ('20220322123207_v2.2','5.0.15');
+INSERT INTO "Albums" ("ID","Name","Genre","Year","Image","ArtistID","Youtube","Spotify") VALUES (1,'Aquarius','Progressive Metal',2010,'https://m.media-amazon.com/images/I/81XdrAyRoNL._SL1500_.jpg',2,'https://youtube.com/playlist?list=OLAK5uy_k8_DcNjoF489-og0MXNkPuFBFl8nnXfNI','https://open.spotify.com/album/6LClzoGjQnFSvPQrZNTOAF?si=LAH53uvoQUS7MgviF91-uQ'),
+ (2,'Blackwater Park','Progressive Death Metal',2001,'https://m.media-amazon.com/images/I/715r+WGbbbL._SL1500_.jpg',1,'https://www.youtube.com/playlist?list=OLAK5uy_mIUb26KtP3IKBx_GoHbIibfw6MGpCri7k','https://open.spotify.com/album/7cMJfxkJwUAcxHCHQMNYYs?si=Itvc4-4DS-uZKmLN8ElM4Q'),
+ (3,'Ghost Reveries','Progressive Metal',2005,'https://m.media-amazon.com/images/I/61MmWUl0XIL._SL1403_.jpg',1,'https://www.youtube.com/playlist?list=OLAK5uy_meqHMApuOAC8QzxlzabYceQdduQwrA-0o','https://open.spotify.com/album/74QPd1WqK8kTsVNtHdBzJ8?si=0VrfICFSSFqrZFr59G2K-A'),
+ (4,'Sorceress','Progressive Rock; Progressive Metal',2016,'https://m.media-amazon.com/images/I/A1LnRNfHXtL._SL1500_.jpg',1,'https://www.youtube.com/playlist?list=OLAK5uy_lIrYBy4ibya5GmypSlLBPwDa9rckdM7HY','https://open.spotify.com/album/2GNdgq3pIVLYZoNK4wJtCP?si=pZ8c0KaITk2SskoGvj9AGA'),
+ (5,'Visions','Progressive Metal',2010,'https://m.media-amazon.com/images/I/71DkIkAv+4L._SL1202_.jpg',2,'https://www.youtube.com/playlist?list=OLAK5uy_mDHeCstF93wEE8SL5tXtcQUNdS7Y_Eu2k','https://open.spotify.com/album/1S4j3gaVtQGvZciLp8z2do?si=NW4IF0GuTIuN_EN9Pf7g6A'),
+ (6,'Parallel Dimensions','Chill Jazz',2019,'https://i.scdn.co/image/ab67616d0000b2735ba600f1f2c39accab72c36c',3,'https://www.youtube.com/playlist?list=PLFUwkwonRM--rEXZs8uS3x5hS_1D27P7H','https://open.spotify.com/album/6bupEbRd79xtPMskgNdHfH?si=A5jDaXy0Q0Sp7Z3RPD98gA'),
+ (7,'Hand. Cannot. Erase.','Progressive Rock',2015,'https://m.media-amazon.com/images/I/51taAxDBYgL._SY580_.jpg',4,'https://www.youtube.com/playlist?list=OLAK5uy_n2oycCelG5Z5dIJTygAJFpUSPyqXW7GIs','https://open.spotify.com/album/6P7vL4vGgyrD7q9VR9BcnV?si=TOrCkDvXSt6n5CY6SE5KJg'),
+ (8,'Rise Radiant','Progressive Rock',2020,'https://www.angrymetalguy.com/wp-content/uploads/2020/05/Album_Cover-500x500.jpg',5,'https://www.youtube.com/playlist?list=OLAK5uy_k3jrZC4NMFNkMbsfRVjyS_0KaoJVPRzbw','https://open.spotify.com/album/1BvdqjCZOvhxZU8HZmqRrA?si=lqbhFe1pTYCMxeAl7o_T0w'),
+ (9,'In Contact','Progressive Rock',2017,'https://img.discogs.com/iivJK1RHPOefp397h9nsIOw6eZ0=/fit-in/600x600/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-10957582-1507200416-9254.jpeg.jpg',5,'https://www.youtube.com/playlist?list=OLAK5uy_kEY6lTiW3uyE6r1odpf92sasy9_kmsUGw','https://open.spotify.com/album/76ffWagOEq3L48KPzK1zIj?si=w7uXk5UASOCyK-uIzl23iw'),
+ (10,'Pitfalls','Progressive Rock',2019,'https://img.discogs.com/sohueivWTo049EdqkH3jFncowE0=/fit-in/600x586/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-14307613-1595894774-4202.jpeg.jpg',7,'https://www.youtube.com/playlist?list=OLAK5uy_l-b4xHsjz_Qyyp7K5AVroIIxvIs86thVU','https://open.spotify.com/album/1A5H6pesxiKqvVFGMKprSM?si=NM8L222qSvGcRyF6FiKU3g'),
+ (11,'...And Justice For All','Thrash Metal',1988,'https://m.media-amazon.com/images/I/81r3FVfNG3L._SL1425_.jpg',8,'https://www.youtube.com/playlist?list=OLAK5uy_kwDDSWKgSgMcCmR7XGOZ7KTyxK-XJO-fo','https://open.spotify.com/album/6Eycw3dwcDMEFSqkUvLQ7g?si=bXYyz4OZRf61Yp_71OZGYw'),
+ (12,'The Raven That Refused to Sing','Progressive Rock; Jazz Fusion',2012,'https://i.discogs.com/gvyZsXiH-F1O26f4tMC96Tan6rbMFB-mXCNfBuf9h3k/rs:fit/g:sm/q:90/h:534/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0Mjcz/NDEzLTE1NzEyMTgw/MTUtODYzNi5qcGVn.jpeg',4,'https://www.youtube.com/playlist?list=OLAK5uy_minQ5ExLHbNcf5SgPBbPt0rCgNh7eMEVU','https://open.spotify.com/album/2xJFvV7JzoYYMere5rqjVf?si=ROtv6xoLTsmaZKytLpOsfg'),
+ (13,'Deadwing','Progressive Rock; Alternative Metal',2005,'https://stevenwilsonhq.com/sw/wp-content/uploads/2015/04/deadwing.jpg',6,'https://www.youtube.com/playlist?list=OLAK5uy_naeeX32UpP_ZslqA58-vA5UIyeARcxH-E','https://open.spotify.com/album/2oQE67Gnc1GoMqoumvjPwN?si=nYD5AQgQRRS92L4YToX9WA'),
+ (15,'Morningrise','Death Metal',1996,'http://cdn.shopify.com/s/files/1/1256/4517/products/Opeth-MorningriseCDDIGISLEEVE_1024x1024.jpg?v=1584874576',1,'https://music.youtube.com/playlist?list=OLAK5uy_nSaYX9AyZPUw6XyUKNEvwiRiMukK65SrU','https://open.spotify.com/album/7mov9rVPoOWLi2mksFx5ex?si=7I-kaO7uSJGr7G-KreSF9A');
+INSERT INTO "Artists" ("ID","Name","Description","ArtistType","StartDate","EndDate","Image","Youtube","Spotify") VALUES (1,'Opeth','Opeth is a Swedish progressive metal band from Stockholm, formed in 1989 by lead vocalist David Isberg.',0,'1989','still active','https://cdns-images.dzcdn.net/images/artist/27005e0f8e4a04c9176ab2751bb2fb9f/500x500.jpg','https://www.youtube.com/channel/UCmQSJTFZaXN85gYk6W3XbdQ','https://open.spotify.com/artist/0ybFZ2Ab08V8hueghSXm6E?si=jQ0nazC0SoWbO5ec8d3V-A'),
+ (2,'Haken','Haken (/ˈheɪkən/) are an English progressive metal band formed in 2007.',0,'2007','still active','https://hakenmusic.com/wp-content/uploads/2020/03/MAX_TAYLOR_GRANT_2019-12-09_UK_Haken-PR_3587-Edit.jpg','https://www.youtube.com/channel/UCGGBF80givLRea3k6fLebcw','https://open.spotify.com/artist/2SRIVGDkdqQnrQdaXxDkJt?si=MpIUc3NwQBWUf9AQcza0jg'),
+ (3,'nr','Nikola Rasic or nr is an elfaque student.',1,'2000','still alive','https://i.scdn.co/image/ab67616d0000b2735ba600f1f2c39accab72c36c','https://www.youtube.com/channel/UC0jfEchk5MY4uq60ERCLauA','https://open.spotify.com/artist/3PBLIQKQkOuqSd3SU6xkXu?si=iqadaXiqRfa9EZcS0QnHxg'),
+ (4,'Steven Wilson','steven wilson temporary description',1,'1967','still alive','https://ichef.bbci.co.uk/news/976/cpsprodpb/D448/production/_85444345_sw-transience-cover.jpg','https://www.youtube.com/channel/UC-9mlH6az1Q_XUP3fw1N4Fg','https://open.spotify.com/artist/4X42BfuhWCAZ2swiVze9O0?si=c8qEvQ1lSzu3e7WY0w8epA'),
+ (5,'Caligula''s Horse','temporary description',0,'2011','still active','https://cdns-images.dzcdn.net/images/artist/d5dda59496498561d200b4db1dba69f5/500x500.jpg','https://www.youtube.com/channel/UCSvdryUV4PNFuS8fYzD8vcw','https://open.spotify.com/artist/6Zd7AjXsoLaweP9FHyudVC?si=dUfU6mWYTGasbS_agss9Hw'),
+ (6,'Porcupine Tree','temporary description',0,'1987','2010','https://townsquare.media/site/366/files/2021/11/attachment-Porcupine-Tree-2021.jpg','https://www.youtube.com/channel/UC9OFhiq5cs10XYGDwBO_7xg','https://open.spotify.com/artist/5NXHXK6hOCotCF8lvGM1I0?si=OjXzIdQWSm6zThKKRUXivA'),
+ (7,'Leprous','temporary description',0,'2001','still active','https://i.pinimg.com/originals/3b/a5/5b/3ba55be2f2a2c49b614afd449a3ccdf0.jpg','https://www.youtube.com/channel/UCqCO7kGqYnxN_JaQPMQk_Xg','https://open.spotify.com/artist/4lgrzShsg2FLA89UM2fdO5?si=HUrVxHiHT_Sg3XI55OGquQ'),
+ (8,'Metallica','temporary description',0,'1981','still active','https://m.media-amazon.com/images/M/MV5BZTNmNThlNzUtMTFkMS00ZTk3LWEyNjQtNGUyZWM1OGJhNjQzXkEyXkFqcGdeQXVyMjUyNDk2ODc@._V1_.jpg','https://www.youtube.com/channel/UCbulh9WdLtEXiooRcYK7SWw','https://open.spotify.com/artist/2ye2Wgw4gimLv2eAKyk1NB?si=tUly9H58RVaYhJdPcCsIYw'),
+ (9999,'UnknownArtist','exampleDescription',0,'1000','9999','https://images.genius.com/393bfda8da80c5024e572eb01cf58020.900x900x1.jpg','https://www.youtube.com/','https://open.spotify.com/');
+INSERT INTO "Songs" ("ID","Title","AlbumID","Youtube","Spotify") VALUES (1,'Drowning in the Flood',1,'https://youtu.be/ai2U8Jv_Peg','https://open.spotify.com/track/58lMqEZ7S3mzJlDsMvlGHN?si=58589f782b924329'),
+ (2,'Sorceress',4,'https://www.youtube.com/watch?v=LhqijfqecvA','https://open.spotify.com/track/2GBAebLEPMbZ00bFZCA0s6?si=0d986a6ca1a345b2'),
+ (3,'Spring MCMLXXIV',4,'https://www.youtube.com/watch?v=YQl9oYeGUTI','https://open.spotify.com/track/6SbW0nelcQv8AwtApioD3a?si=062068bc9ba549d9'),
+ (4,'The Wilde Flowers',4,'https://www.youtube.com/watch?v=O9vA6dJJX-8','https://open.spotify.com/track/6JXSdGC62LXgJKFxe8eRMZ?si=7b52b0acdf274c2d'),
+ (6,'Oceanrise',8,'https://youtube.com','https://open.spotify.com'),
+ (7,'Salt',8,'https://youtube.com','https://open.spotify.com'),
+ (10,'Persephone',4,'https://youtu.be/avQk0fInqaM','https://open.spotify.com'),
+ (14,'Valkirye',8,'https://youtube.com','https://open.spotify.com'),
+ (15,'The Tempest',8,'https://youtube.com','https://open.spotify.com'),
+ (16,'Capulet',9,'https://youtube.com','https://open.spotify.com'),
+ (17,'Dream the Dead',9,'https://youtube.com','https://open.spotify.com'),
+ (19,'Parallel Dimensions',6,'https://youtube.com','https://open.spotify.com');
+INSERT INTO "CLinks" ("ID","ArtistID","ConcertID") VALUES (1,1,1),
+ (2,6,1),
+ (3,4,2);
+INSERT INTO "Concerts" ("ID","Name","Date","Url","Image") VALUES (1,'Opeth at Rockaplast','2017','https://www.youtube.com/watch?v=q4Gj3zoN3MY','https://i.ytimg.com/vi/q4Gj3zoN3MY/maxresdefault.jpg'),
+ (2,'Home Invasion','idk neki datum','https://www.youtube.com/watch?v=GwfGi_Qomc8&list=PLxjwW5g_Y9kauhZLYPvnJ4QxsHRU9HTw9','https://m.media-amazon.com/images/I/61ZpFV9VI2L._SL1400_.jpg');
+COMMIT;
