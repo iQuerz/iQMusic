@@ -20,17 +20,26 @@ namespace WebDevProj.Controllers
         }
 
         [HttpGet]
-        [Route("{AlbumID}")]
-        public async Task<ActionResult> GetAlbumSongs(int AlbumID)
+        [Route("{albumID}")]
+        public async Task<ActionResult> GetAlbumSongs(int albumID)
         {
-            var album = await Context.Albums.FindAsync(AlbumID);
+            if(albumID <= 0)
+                return BadRequest($"ID Values are strictly positive. {albumID} is not a valid ID.");
+            try
+            {
+                var album = await Context.Albums.FindAsync(albumID);
 
-            if (album == null)
-                return NotFound($"Could not find the related album. Try with a different ID.");
+                if (album == null)
+                    return NotFound($"Could not find the related album. Try with a different ID.");
 
-            var songs = Context.Songs.Where(s => s.AlbumID == AlbumID);
+                var songs = Context.Songs.Where(s => s.AlbumID == albumID);
 
-            return Ok(songs);
+                return Ok(songs);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpPost]
@@ -39,13 +48,13 @@ namespace WebDevProj.Controllers
             if (song.ID != 0)
                 return BadRequest("ID not 0. ID needs to be 0 for auto-increment.");
 
-            var album = await Context.Albums.FindAsync(song.AlbumID);
-
-            if (album == null)
-                return NotFound($"Could not find the related album. Try with a different ID.");
-
             try
             {
+                var album = await Context.Albums.FindAsync(song.AlbumID);
+
+                if (album == null)
+                    return NotFound($"Could not find the related album. Try with a different ID.");
+
                 Context.Songs.Add(song);
                 await Context.SaveChangesAsync();
 
@@ -58,23 +67,33 @@ namespace WebDevProj.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult> UpdateSong([FromBody] Song song, int id)
+        [Route("{songID}")]
+        public async Task<ActionResult> UpdateSong([FromBody] Song song, int songID)
         {
-            if (id <= 0)
-                return BadRequest($"ID Values are strictly positive. {id} is not a valid ID.");
+            if (song.ID != songID)
+                return BadRequest("Endpoint ID and object ID are not equal.");
 
-            var s = await Context.Songs.FindAsync(id);
+            if (songID <= 0)
+                return BadRequest($"ID Values are strictly positive. {songID} is not a valid ID.");
 
-            if (s == null)
-                return NotFound($"Could not find the related song. Try with a different ID.");
+            try
+            {
+                var s = await Context.Songs.FindAsync(songID);
 
-            s.Title = song.Title;
-            s.Youtube = song.Youtube;
-            s.Spotify = song.Spotify;
-            s.AlbumID = song.AlbumID;
-            await Context.SaveChangesAsync();
-            return Ok(s);
+                if (s == null)
+                    return NotFound($"Could not find the related song. Try with a different ID.");
+
+                s.Title = song.Title;
+                s.Youtube = song.Youtube;
+                s.Spotify = song.Spotify;
+                s.AlbumID = song.AlbumID;
+                await Context.SaveChangesAsync();
+                return Ok(s);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpDelete]
@@ -84,13 +103,12 @@ namespace WebDevProj.Controllers
             if (songID <= 0)
                 return BadRequest($"ID Values are strictly positive. {songID} is not a valid ID.");
 
-            var s = await Context.Songs.FindAsync(songID);
-
-            if (s == null)
-                return NotFound($"Could not find the related song. Try with a different ID.");
-
             try
             {
+                var s = await Context.Songs.FindAsync(songID);
+                if (s == null)
+                    return NotFound($"Could not find the related song. Try with a different ID.");
+
                 Context.Songs.Remove(s);
                 await Context.SaveChangesAsync();
                 return Ok("Entity removed succesfully.");

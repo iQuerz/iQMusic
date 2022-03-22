@@ -18,39 +18,51 @@ namespace WebDevProj.Controllers
         }
 
         [HttpGet]
-        [Route("{ArtistID}")]
-        public async Task<ActionResult> GetArtist(int ArtistID)
+        [Route("{artistID}")]
+        public async Task<ActionResult> GetArtist(int artistID)
         {
-            if (ArtistID <= 0)
+            if (artistID <= 0)
+                return BadRequest($"ID Values are strictly positive. {artistID} is not a valid ID.");
+
+            try
             {
-                return BadRequest();
+                var artist = await Context.Artists.FindAsync(artistID);
+
+                if (artist == null)
+                    return NotFound("Could not find the related artist. Try with a different ID.");
+
+                return Ok(artist);
             }
-
-            var artist = await Context.Artists.FindAsync(ArtistID);
-
-            if (artist == null)
-                return BadRequest();
-
-            return Ok(artist);
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet]
         [Route("page/{page}")]
         public async Task<ActionResult> GetArtistsPage(int page = 1)
         {
-            if (page < 1)
-                return BadRequest(); //stranica su prirodni brojevi
+            try
+            {
+                if (page < 1)
+                    page = 1;
 
-            const int itemsPerPage = 20;
-            int skip = (page - 1) * itemsPerPage;
-            int count = Context.Artists.Count();
+                const int itemsPerPage = 20;
+                int skip = (page - 1) * itemsPerPage;
+                int count = Context.Artists.Count();
 
-            if (skip >= count)
-                skip = count / 20;
-            
-            var artists = Context.Artists.OrderBy(a => a.Name).Skip(skip).Take(itemsPerPage);
-            
-            return Ok(artists);
+                if (skip >= count)
+                    skip = count / 20;
+
+                var artists = Context.Artists.OrderBy(a => a.Name).Skip(skip).Take(itemsPerPage);
+
+                return Ok(artists);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet]
@@ -58,6 +70,8 @@ namespace WebDevProj.Controllers
         public async Task<ActionResult> GetArtistByName(string name)
         {
             var artist = Context.Artists.Where(a => a.Name == name).FirstOrDefault();
+            if (artist == null)
+                return NotFound("Could not find the related artist. Try with a different ID.");
             return Ok(artist);
         }
 
@@ -65,36 +79,47 @@ namespace WebDevProj.Controllers
         public async Task<ActionResult> CreateArtist([FromBody] Artist artist)
         {
             if (artist.ID != 0)
-                return BadRequest(); //create se bez id
+                return BadRequest("ID not 0. ID needs to be 0 for auto-increment.");
 
-            var test = Context.Artists.Where(a => a.Name.ToLower() == artist.Name.ToLower()).FirstOrDefault();
-            if (test != null)
-                return BadRequest(); //vec postoji
+            try
+            {
+                var test = Context.Artists.Where(a => a.Name.ToLower() == artist.Name.ToLower()).FirstOrDefault();
+                if (test != null)
+                    return BadRequest("The artist you're trying to create already exists.");
 
-            Context.Artists.Add(artist);
-            await Context.SaveChangesAsync();
-            return Ok(artist);
+                Context.Artists.Add(artist);
+                await Context.SaveChangesAsync();
+                return Ok(artist);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult> UpdateArtist([FromBody] Artist artist, int id)
+        [Route("{artistID}")]
+        public async Task<ActionResult> UpdateArtist([FromBody] Artist artist, int artistID)
         {
-            if (artist.ID != id)
-                return BadRequest(); //url & object don't match
+            if (artist.ID != artistID)
+                return BadRequest("Endpoint ID and object ID are not equal.");
 
-            var a = await Context.Artists.FindAsync(id);
-            if (a == null)
-                return BadRequest(); //ne postoji
+            if(artistID <= 0)
+                return BadRequest($"ID Values are strictly positive. {artistID} is not a valid ID.");
 
-            if (a.Name != artist.Name)
-            {
-                var test = Context.Artists.Where(x => x.Name.ToLower() == artist.Name.ToLower()).FirstOrDefault();
-                if (test != null)
-                    return BadRequest(); //ime vec postoji
-            }
             try
             {
+                var a = await Context.Artists.FindAsync(artistID);
+                if (a == null)
+                    return NotFound("Could not find the related artist. Try with a different ID.");
+
+                if (a.Name != artist.Name)
+                {
+                    var test = Context.Artists.Where(x => x.Name.ToLower() == artist.Name.ToLower()).FirstOrDefault();
+                    if (test != null)
+                        return BadRequest("Cannot update. An artist with the same name already exists.");
+                }
+
                 a.Name = artist.Name;
                 a.Image = artist.Image;
                 a.Spotify = artist.Spotify;
@@ -104,39 +129,48 @@ namespace WebDevProj.Controllers
                 a.Description = artist.Description;
                 a.ArtistType = artist.ArtistType;
                 await Context.SaveChangesAsync();
+                return Ok(a);
             }
             catch(Exception e)
             {
-                return StatusCode(500, "Server error.\n" + e.Message);
+                return StatusCode(500, e.Message);
             }
-
-            return Ok(a);
         }
 
         [HttpDelete]
-        [Route("{id}")]
-        public async Task<ActionResult> DeleteArtist(int id)
+        [Route("{artistID}")]
+        public async Task<ActionResult> DeleteArtist(int artistID)
         {
-            if (id <= 0)
-                return BadRequest(); //nemoz bude <0
+            if (artistID <= 0)
+                return BadRequest($"ID Values are strictly positive. {artistID} is not a valid ID.");
 
-            var artist = await Context.Artists.FindAsync(id);
-
-            if (artist == null)
-                return BadRequest(); //ne postoji
-
-            var albums = Context.Albums.Where(a => a.ArtistID == artist.ID);
-
-            foreach(var album in albums)
+            try
             {
-                var songs = Context.Songs.Where(s => s.AlbumID == album.ID);
-                Context.Songs.RemoveRange(songs);
-            }
-            Context.Albums.RemoveRange(albums);
+                var artist = await Context.Artists.FindAsync(artistID);
 
-            Context.Artists.Remove(artist);
-            await Context.SaveChangesAsync();
-            return Ok("Entity removed succesfully.");
+                if (artist == null)
+                    return NotFound("Could not find the related artist. Try with a different ID.");
+
+                var albums = Context.Albums.Where(a => a.ArtistID == artist.ID);
+                if (albums.Count() > 0)
+                {
+                    foreach (var album in albums)
+                    {
+                        var songs = Context.Songs.Where(s => s.AlbumID == album.ID);
+                        if (songs.Count() > 0)
+                            Context.Songs.RemoveRange(songs);
+                    }
+                    Context.Albums.RemoveRange(albums);
+                }
+                Context.Artists.Remove(artist);
+
+                await Context.SaveChangesAsync();
+                return Ok("Entity removed succesfully.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }

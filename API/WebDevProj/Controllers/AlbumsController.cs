@@ -19,108 +19,157 @@ namespace WebDevProj.Controllers
         }
 
         [HttpGet]
-        [Route("{AlbumID}")]
-        public async Task<ActionResult> GetAlbum(int AlbumID)
+        [Route("{albumID}")]
+        public async Task<ActionResult> GetAlbum(int albumID)
         {
-            if (AlbumID <= 0)
+            if (albumID <= 0)
+                return BadRequest($"ID Values are strictly positive. {albumID} is not a valid ID.");
+
+            try
             {
-                return BadRequest();
+                var album = await Context.Albums.FindAsync(albumID);
+
+                if (album == null)
+                    return NotFound("Could not find the related album. Try with a different ID.");
+
+                return Ok(album);
             }
-
-            var album = await Context.Albums.FindAsync(AlbumID);
-
-            if (album == null)
-                return BadRequest();
-
-            return Ok(album);
+            catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet]
         [Route("page/{page}")]
         public async Task<ActionResult> GetAlbumsPage(int page = 1)
         {
-            if (page < 1)
-                page = 1;
+            try
+            {
+                if (page < 1)
+                    page = 1;
 
-            const int itemsPerPage = 20;
-            int skip = (page - 1) * itemsPerPage;
-            int count = Context.Artists.Count();
+                const int itemsPerPage = 20;
+                int skip = (page - 1) * itemsPerPage;
+                int count = Context.Artists.Count();
 
-            if (skip >= count)
-                skip = count / 20;
+                if (skip >= count)
+                    skip = count / 20;
 
-            var albums = Context.Albums.OrderBy(a => a.Name).Skip(skip).Take(itemsPerPage);
+                var albums = Context.Albums.OrderBy(a => a.Name).Skip(skip).Take(itemsPerPage);
 
-            return Ok(albums);
+                return Ok(albums);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet]
         [Route("artist/{artistID}")]
         public async Task<ActionResult> GetArtistAlbums(int artistID)
         {
-            var albums = Context.Albums.Where(a => a.ArtistID == artistID);
-            return Ok(albums);
+            if (artistID <= 0)
+                return BadRequest($"ID Values are strictly positive. {artistID} is not a valid ID.");
+
+            try
+            {
+                var albums = Context.Albums.Where(a => a.ArtistID == artistID);
+                return Ok(albums);
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateAlbum([FromBody] Album album)
         {
             if (album.ID != 0)
-                return BadRequest(); //create se bez id
+                return BadRequest("ID not 0. ID needs to be 0 for auto-increment.");
 
-            var test = Context.Albums.Where(a => a.Name.ToLower() == album.Name.ToLower()).FirstOrDefault();
-            if (test != null)
-                return BadRequest(); //vec postoji
+            try
+            {
+                var test = Context.Albums.Where(a => a.Name.ToLower() == album.Name.ToLower()).FirstOrDefault();
+                if (test != null)
+                    return BadRequest("The album you're trying to create already exists.");
 
-            Context.Albums.Add(album);
-            await Context.SaveChangesAsync();
-            return Ok(album);
+                Context.Albums.Add(album);
+                await Context.SaveChangesAsync();
+                return Ok(album);
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult> UpdateAlbum([FromBody] Album album, int id)
+        [Route("{albumID}")]
+        public async Task<ActionResult> UpdateAlbum([FromBody] Album album, int albumID)
         {
-            var a = await Context.Albums.FindAsync(album.ID);
-            if (a == null)
-                return BadRequest(); //ne postoji
+            if (album.ID != albumID)
+                return BadRequest("Endpoint ID and object ID are not equal.");
 
-            if (a.Name != album.Name)
+            if (albumID <= 0)
+                return BadRequest($"ID Values are strictly positive. {albumID} is not a valid ID.");
+            
+            try
             {
-                var test = Context.Albums.Where(x => x.Name.ToLower() == album.Name.ToLower()).FirstOrDefault();
-                if (test != null)
-                    return BadRequest(); //ime vec postoji
-            }
+                var a = await Context.Albums.FindAsync(albumID);
+                if (a == null)
+                    return NotFound($"Could not find the related album. Try with a different ID.");
 
-            a.Name = album.Name;
-            a.Image = album.Image;
-            a.Spotify = album.Spotify;
-            a.Youtube = album.Youtube;
-            a.Genre = album.Genre;
-            a.Year = album.Year;
-            a.ArtistID = album.ArtistID;
-            await Context.SaveChangesAsync();
-            return Ok(a);
+                if (a.Name != album.Name)
+                {
+                    var test = Context.Albums.Where(x => x.Name.ToLower() == album.Name.ToLower()).FirstOrDefault();
+                    if (test != null)
+                        return BadRequest("Cannot update. An album with the same name already exists.");
+                }
+
+                a.Name = album.Name;
+                a.Image = album.Image;
+                a.Spotify = album.Spotify;
+                a.Youtube = album.Youtube;
+                a.Genre = album.Genre;
+                a.Year = album.Year;
+                a.ArtistID = album.ArtistID;
+                await Context.SaveChangesAsync();
+                return Ok(a);
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpDelete]
-        [Route("{id}")]
-        public async Task<ActionResult> DeleteAlbum(int id)
+        [Route("{albumID}")]
+        public async Task<ActionResult> DeleteAlbum(int albumID)
         {
-            if (id <= 0)
-                return BadRequest(); //nemoz bude <0
+            if (albumID <= 0)
+                return BadRequest($"ID Values are strictly positive. {albumID} is not a valid ID.");
 
-            var album = await Context.Albums.FindAsync(id);
+            try
+            {
+                var album = await Context.Albums.FindAsync(albumID);
+                if (album == null)
+                    return NotFound($"Could not find the related album. Try with a different ID.");
 
-            if (album == null)
-                return BadRequest(); //ne postoji
+                var songs = Context.Songs.Where(s => s.AlbumID == album.ID);
+                if (songs.Count() > 0)
+                    Context.Songs.RemoveRange(songs);
 
-            var songs = Context.Songs.Where(s => s.AlbumID == album.ID);
-            Context.Songs.RemoveRange(songs);
-
-            Context.Albums.Remove(album);
-            await Context.SaveChangesAsync();
-            return Ok("Entity removed succesfully.");
+                Context.Albums.Remove(album);
+                await Context.SaveChangesAsync();
+                return Ok("Entity removed succesfully.");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }
