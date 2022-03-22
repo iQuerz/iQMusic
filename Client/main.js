@@ -1,33 +1,19 @@
 import { Artist } from "./Artist.js";
 import { Album } from "./Album.js";
-import { Song } from "./Song.js";
 
-var pesma1 = new Song("Nikotin","https://youtu.be/hSv6jIda_eU","https://open.spotify.com/track/5K4jxTeuzMHi3nqzGtAhYU?si=81a3d1fabdbb4412", 1);
-var pesma2 = new Song("Autumn" ,"https://youtu.be/-sIJExhTlUQ","https://open.spotify.com/track/3pv3bsGI0gzamJzN3m1wmR?si=0b092f740ea34591", 2);
-
-var album2 = new Album("Rise Radiant", "Progressive Rock", 2020, "https://www.angrymetalguy.com/wp-content/uploads/2020/05/Album_Cover-500x500.jpg", "https://www.youtube.com/watch?v=dNc5PT645sU&list=PL9hYR5qRkc2yEMrZuVoQJBXIKp3BseN5r", "https://open.spotify.com/album/1BvdqjCZOvhxZU8HZmqRrA?si=Dn9tSfI7TsaZf5iwOTOkyg", 2);
-var album3 = new Album("Rise Radiant", "Progressive Rock", 2020, "https://www.angrymetalguy.com/wp-content/uploads/2020/05/Album_Cover-500x500.jpg", "https://www.youtube.com/watch?v=dNc5PT645sU&list=PL9hYR5qRkc2yEMrZuVoQJBXIKp3BseN5r", "https://open.spotify.com/album/1BvdqjCZOvhxZU8HZmqRrA?si=Dn9tSfI7TsaZf5iwOTOkyg", 2);
-var album4 = new Album("Rise Radiant", "Progressive Rock", 2020, "https://www.angrymetalguy.com/wp-content/uploads/2020/05/Album_Cover-500x500.jpg", "https://www.youtube.com/watch?v=dNc5PT645sU&list=PL9hYR5qRkc2yEMrZuVoQJBXIKp3BseN5r", "https://open.spotify.com/album/1BvdqjCZOvhxZU8HZmqRrA?si=Dn9tSfI7TsaZf5iwOTOkyg", 2);
-var album5 = new Album("Rise Radiant", "Progressive Rock", 2020, "https://www.angrymetalguy.com/wp-content/uploads/2020/05/Album_Cover-500x500.jpg", "https://www.youtube.com/watch?v=dNc5PT645sU&list=PL9hYR5qRkc2yEMrZuVoQJBXIKp3BseN5r", "https://open.spotify.com/album/1BvdqjCZOvhxZU8HZmqRrA?si=Dn9tSfI7TsaZf5iwOTOkyg", 2);
-
-var artist2 = new Artist("Caligula's Horse", "opis2", "https://cdns-images.dzcdn.net/images/artist/d5dda59496498561d200b4db1dba69f5/500x500.jpg", "Band", "1997", null, "https://www.youtube.com/channel/UCSvdryUV4PNFuS8fYzD8vcw", "https://open.spotify.com/artist/6Zd7AjXsoLaweP9FHyudVC?si=bdRKPvWyRHqs8QEqXrjcNw");
-var artist3 = new Artist("Caligula's Horse", "opis2", "https://cdns-images.dzcdn.net/images/artist/d5dda59496498561d200b4db1dba69f5/500x500.jpg", "Band", "1997", null, "https://www.youtube.com/channel/UCSvdryUV4PNFuS8fYzD8vcw", "https://open.spotify.com/artist/6Zd7AjXsoLaweP9FHyudVC?si=bdRKPvWyRHqs8QEqXrjcNw");
-var artist4 = new Artist("Caligula's Horse", "opis2", "https://cdns-images.dzcdn.net/images/artist/d5dda59496498561d200b4db1dba69f5/500x500.jpg", "Band", "1997", null, "https://www.youtube.com/channel/UCSvdryUV4PNFuS8fYzD8vcw", "https://open.spotify.com/artist/6Zd7AjXsoLaweP9FHyudVC?si=bdRKPvWyRHqs8QEqXrjcNw");
-var artist5 = new Artist("Caligula's Horse", "opis2", "https://cdns-images.dzcdn.net/images/artist/d5dda59496498561d200b4db1dba69f5/500x500.jpg", "Band", "1997", null, "https://www.youtube.com/channel/UCSvdryUV4PNFuS8fYzD8vcw", "https://open.spotify.com/artist/6Zd7AjXsoLaweP9FHyudVC?si=bdRKPvWyRHqs8QEqXrjcNw");
-var artist6 = new Artist("Caligula's Horse", "opis2", "https://cdns-images.dzcdn.net/images/artist/d5dda59496498561d200b4db1dba69f5/500x500.jpg", "Band", "1997", null, "https://www.youtube.com/channel/UCSvdryUV4PNFuS8fYzD8vcw", "https://open.spotify.com/artist/6Zd7AjXsoLaweP9FHyudVC?si=bdRKPvWyRHqs8QEqXrjcNw");
-var artist7 = new Artist("Caligula's Horse", "opis2", "https://cdns-images.dzcdn.net/images/artist/d5dda59496498561d200b4db1dba69f5/500x500.jpg", "Band", "1997", null, "https://www.youtube.com/channel/UCSvdryUV4PNFuS8fYzD8vcw", "https://open.spotify.com/artist/6Zd7AjXsoLaweP9FHyudVC?si=bdRKPvWyRHqs8QEqXrjcNw");
-
-var Songs = [pesma1, pesma2];
-var Albums = [album2, album3, album4, album5];
-var Artists = [artist2, artist3, artist4, artist5, artist6, artist7];
+const api = "https://localhost:5001/api/";
 
 var parentDiv = document.querySelector("#parent");
 var divs = ["Albums", "Artists"];
+var albumPage = 1, artistPage = 1;
+
 
 // two divs. one for albums one for artists
 divs.forEach(x => {
     let containerDiv = document.createElement("div");
     containerDiv.classList.add("container");
+
+    //#region MenuStrip
 
     //label div
     let labelDiv = document.createElement("div");
@@ -37,6 +23,17 @@ divs.forEach(x => {
     let left = document.createElement("i");
     left.classList.add("fa-solid");
     left.classList.add("fa-chevron-left");
+    left.addEventListener('click', f => {
+        contentDiv.textContent = '';
+
+        if(x == "Albums")
+            albumPage = newPage(albumPage - 1);
+        else
+            artistPage = newPage(artistPage - 1);
+
+        contentDiv = renderContent(x);
+        containerDiv.appendChild(contentDiv);
+    });
 
     //label
     let label = document.createElement("h1");
@@ -46,11 +43,35 @@ divs.forEach(x => {
     let right = document.createElement("i");
     right.classList.add("fa-solid");
     right.classList.add("fa-chevron-right");
+    right.addEventListener('click', f => {
+        contentDiv.textContent = '';
+        if(x == "Albums")
+            albumPage++;
+        else
+            artistPage++;
+
+        contentDiv = renderContent(x);
+        containerDiv.appendChild(contentDiv);
+    });
 
     //plus
     let plusSign = document.createElement("i");
     plusSign.classList.add("fa-solid");
     plusSign.classList.add("fa-circle-plus");
+    plusSign.addEventListener('click', f => {
+        if(x == "Albums")
+        {
+            let a = new Album(0, "exampleName", "exampleGenre", "releaseYear", "https://cdn.discordapp.com/attachments/912736246198046794/955689192627794000/placeholder.jpg", "youtube playlist", "spotify playlist", 9999);
+            localStorage.setItem('album', JSON.stringify(a));
+            window.open("AlbumView/album.html", "_self");
+        }
+        else
+        {
+            let a = new Artist(0, "exampleName", "exampleDescription", "https://cdn.discordapp.com/attachments/912736246198046794/955689192627794000/placeholder.jpg",0,1000,9999, "youtube.com", "spotify.com");
+            localStorage.setItem('artist', JSON.stringify(a));
+            window.open("ArtistView/artist.html", "_self");
+        }
+    })
 
     labelDiv.appendChild(left);
     labelDiv.appendChild(label);
@@ -58,47 +79,54 @@ divs.forEach(x => {
     labelDiv.appendChild(plusSign);
 
     containerDiv.appendChild(labelDiv);
+    //#endregion
 
-    //content div
+    //#region Contents
+
+    //content div (houses albums or artists)
+    var contentDiv = renderContent(x);
+
+    containerDiv.appendChild(contentDiv);
+    parentDiv.appendChild(containerDiv);
+    //#endregion
+
+});
+
+function renderContent(x){
     let contentDiv = document.createElement("div");
     contentDiv.classList.add("contentDiv");
 
     //#region content elements creation
+    let fetchurl = api + x + "/page/";
     if(x == "Albums"){
-        Albums.forEach((album,index) => {
-            let albumDiv = document.createElement("div");
-            albumDiv.classList.add("contentElement")
-            let albumImg = document.createElement("img");
-            albumImg.src = album.Image;
-            let albumName = document.createElement("label");
-            albumName.textContent = album.Name;
-            albumDiv.appendChild(albumImg);
-            albumDiv.appendChild(albumName);
-            contentDiv.appendChild(albumDiv);
-            albumDiv.addEventListener('click', f => {
-                console.log(album);
-            });
-        });
+        fetch(fetchurl + albumPage)
+        .then(response => {
+            response.json().then(albums => {
+                albums.forEach(album => {
+                    let a = new Album(album.id, album.name, album.genre, album.year, album.image, album.youtube, album.spotify, album.artistID);
+                    contentDiv.appendChild(a.renderPreview());
+                })
+            })
+        })
     }
     else{
-        Artists.forEach( artist => {
-            let artistDiv = document.createElement("div");
-            artistDiv.classList.add("contentElement")
-            let artistImg = document.createElement("img");
-            artistImg.src = artist.Image;
-            let artistName = document.createElement("label");
-            artistName.textContent = artist.Name;
-            artistDiv.appendChild(artistImg);
-            artistDiv.appendChild(artistName);
-            contentDiv.appendChild(artistDiv);
-            artistDiv.addEventListener('click', f => {
-                console.log(artist);
-            });
-        });
+        fetch(fetchurl + artistPage)
+        .then(response => {
+            response.json().then(artists => {
+                artists.forEach(artist => {
+                    if(artist.id == 9999)
+                        return;
+                    let a = new Artist(artist.id, artist.name, artist.description, artist.image, artist.artistType, artist.startDate, artist.endDate, artist.youtube, artist.spotify);
+                    contentDiv.appendChild(a.renderPreview());
+                })
+            })
+        })
     }
-    //#endregion
+    return contentDiv
+}
 
-    containerDiv.appendChild(contentDiv);
-
-    parentDiv.appendChild(containerDiv);
-});
+function newPage(page){
+    if(page<1)
+        return 1;
+    return page;
+}

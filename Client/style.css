@@ -9,6 +9,10 @@
     flex-direction: column;
     align-items: center;
 }
+.contentElement:hover{
+    background-color: #c0c5ce;
+    color:#333d45;
+}
 .contentDiv{
     display: flex;
     flex-direction: row;

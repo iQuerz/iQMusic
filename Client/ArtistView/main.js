@@ -2,78 +2,41 @@ import { Artist } from "../Artist.js";
 import { Album } from "../Album.js";
 import { Song } from "../Song.js";
 
+const api = "https://localhost:5001/api/";
 var parentDiv = document.querySelector("#parent");
 
-var artist = new Artist("Caligula's Horse", "opis2", "https://cdns-images.dzcdn.net/images/artist/d5dda59496498561d200b4db1dba69f5/500x500.jpg", "Band", "1997", null, "https://www.youtube.com/channel/UCSvdryUV4PNFuS8fYzD8vcw", "https://open.spotify.com/artist/6Zd7AjXsoLaweP9FHyudVC?si=bdRKPvWyRHqs8QEqXrjcNw");
-var album1 = new Album("Rise Radiant", "Progressive Rock", 2020, "https://www.angrymetalguy.com/wp-content/uploads/2020/05/Album_Cover-500x500.jpg", "https://www.youtube.com/watch?v=dNc5PT645sU&list=PL9hYR5qRkc2yEMrZuVoQJBXIKp3BseN5r", "https://open.spotify.com/album/1BvdqjCZOvhxZU8HZmqRrA?si=Dn9tSfI7TsaZf5iwOTOkyg", 2);
-var albums = [album1, album1];
+var artist = JSON.parse(localStorage.getItem('artist'));
+artist = new Artist(artist.ID, artist.Name, artist.Description, artist.Image, artist.ArtistType, artist.StartDate, artist.EndDate, artist.Youtube, artist.Spotify);
 
+var albums = await getAlbums(artist.ID);
 
 var artistLabel = document.createElement("h1");
-artistLabel.textContent = artist.ArtistType + " Info";
+artistLabel.classList.add("delete");
+artistLabel.textContent = artist.getArtistType() + " Info";
+artistLabel.addEventListener('mouseenter', f => {
+    artistLabel.textContent = "Delete this " + artist.getArtistType();
+});
+artistLabel.addEventListener('mouseleave', f => {
+    artistLabel.textContent = artist.getArtistType() + " Info";
+});
+artistLabel.addEventListener('click', async f => {
+    let response = await fetch(api + "Artists/" + artist.ID, {
+        method: 'DELETE'
+    })
+    if(!response.ok){
+        let err = await response.json();
+        alert(err.title);
+        return;
+    }
+    alert(artist.getArtistType() + " successfully removed.");
+    window.open("../index.html", "_self");
+})
 parentDiv.appendChild(artistLabel);
 
 var artistDiv = document.createElement("div");
 artistDiv.classList.add("artistInfo");
-
-var artistImg = document.createElement("img");
-artistImg.src = artist.Image;
-
-var artistInfoDiv = document.createElement("div");
-artistInfoDiv.classList.add("artistInfoContent");
-
-//#region artist info
-for (const [key, value] of Object.entries(artist)) {
-
-    let lbl = key;
-    let inpt = value;
-    if(key == "StartDate")
-    {
-        if(artist.ArtistType == "Band")
-            lbl = "Formed";
-        else
-            lbl = "Born"
-    }
-    if(key == "EndDate")
-    {
-        if(artist.ArtistType == "Band")
-            lbl = "Breakup"
-        else
-            lbl = "Died"
-    }
-
-    let infoDiv = document.createElement("div");
-    infoDiv.classList.add("artistInfoEntry");
-
-    let label = document.createElement("label");
-    label.textContent = lbl + ": ";
-    infoDiv.appendChild(label);
-
-    let input = document.createElement("input");
-    input.classList.add("artistInfoEntry");
-    input.value = inpt;
-    input.readOnly = true;
-    infoDiv.appendChild(input);
-
-    let edit = document.createElement("i");
-    edit.classList.add("fa-solid");
-    edit.classList.add("fa-pen");
-    edit.addEventListener('click', f => {
-        input.readOnly = !input.readOnly;
-        if(input.readOnly)
-            edit.classList.remove("active");
-        else
-            edit.classList.add("active");
-    });
-    infoDiv.appendChild(edit);
-
-    artistInfoDiv.appendChild(infoDiv);
-}
-
-artistDiv.appendChild(artistImg);
-artistDiv.appendChild(artistInfoDiv);
+artist.renderDetails(artistDiv);
 parentDiv.appendChild(artistDiv);
-//#endregion
 
 var tracklistLabel = document.createElement("h1");
 tracklistLabel.textContent = "Albums:";
@@ -85,47 +48,7 @@ var albumsDiv = document.createElement("div");
 albumsDiv.classList.add("artistAlbums");
 
 albums.forEach( album => {
-    //create songDiv
-    let albumDiv = document.createElement("div");
-    albumDiv.classList.add("artistAlbum");
-
-    for (const [key, value] of Object.entries(album)) {
-        if(key == "ArtistID")
-            continue;
-
-        let container = document.createElement("div");
-        container.classList.add("artistAlbumEntry");
-
-        let label = document.createElement("label");
-        label.textContent = key + ": ";
-        container.appendChild(label);
-
-        let input = document.createElement("input");
-        input.value = value;
-        input.readOnly = true;
-        input.classList.add("artistAlbumEntry");
-        container.appendChild(input);
-
-        let edit = document.createElement("i");
-        edit.classList.add("fa-solid");
-        edit.classList.add("fa-pen");
-        edit.addEventListener('click', f => {
-            input.readOnly = !input.readOnly;
-            if(input.readOnly)
-                edit.classList.remove("active");
-            else
-                edit.classList.add("active");
-        });
-        container.appendChild(edit);
-
-        albumDiv.appendChild(container);
-    }
-    let trash = document.createElement("i");
-    trash.classList.add("fa-solid");
-    trash.classList.add("fa-trash-can");
-    trash.textContent = " Delete this album";
-    albumDiv.appendChild(trash);
-    albumsDiv.appendChild(albumDiv);
+    album.renderShortDetails(albumsDiv);
 });
 
 parentDiv.appendChild(albumsDiv);
@@ -139,16 +62,82 @@ parentDiv.appendChild(buttonsDiv);
 var saveButton = document.createElement("button");
 saveButton.classList.add("save");
 saveButton.textContent = "Save Changes";
-saveButton.addEventListener('click', f => {
-    //save click event
+saveButton.addEventListener('click', async f => {
+    await saveChanges();
+    artistDiv.textContent = '';
+    artist.renderDetails(artistDiv);
+
+    albumsDiv.textContent = '';
+    albums.forEach( album => {
+        album.renderShortDetails(albumsDiv);
+    });
 });
 
 var cancelButton = document.createElement("button");
 cancelButton.classList.add("cancel");
 cancelButton.textContent = "Cancel Changes";
 cancelButton.addEventListener('click', f => {
-    //cancel click event
+    artistDiv.textContent = '';
+    artist.renderDetails(artistDiv);
+
+    albumsDiv.textContent = '';
+    albums.forEach( album => {
+        album.renderShortDetails(albumsDiv);
+    });
 });
 
 buttonsDiv.appendChild(saveButton);
 buttonsDiv.appendChild(cancelButton);
+
+async function getAlbums(artistID){
+    let response = await fetch(api + "Albums/artist/" + artistID);
+    let data = await response.json();
+    let albums = [];
+    data.forEach(album => {
+        let a = new Album(album.id, album.name, album.genre, album.year, album.image, album.youtube, album.spotify, album.artistID);
+        albums.push(a);
+    });
+    return albums;
+}
+async function saveChanges(){
+    let artistDiv = document.querySelector(".artistInfo");
+    let artistInputs = artistDiv.querySelectorAll("input");
+    
+    let newArtist = new Artist(artist.ID, artistInputs[0].value, artistInputs[1].value, artistInputs[2].value, parseInt(artistInputs[3].value), artistInputs[4].value, artistInputs[5].value, artistInputs[6].value, artistInputs[7].value);
+
+    if(newArtist.ID == 0){
+        let response = await fetch(api + "Artists", {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newArtist)
+        });
+        if(!response.ok){
+            let err = await response.json();
+            alert(err.title);
+            return;
+        }
+        let data = await response.json();
+        artist = newArtist;
+        artist.ID = data.id;
+        albums = await getAlbums(artist.ID);
+        alert("Update successful.");
+        return;
+    }
+
+    let response = await fetch(api + "Artists/" + newArtist.ID, {
+        method: 'PUT',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newArtist)
+    });
+    if(!response.ok){
+        let err = await response.json();
+        alert(err.title);
+        return;
+    }
+    artist = newArtist;
+    alert("Update successful.");
+}

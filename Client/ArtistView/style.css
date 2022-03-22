@@ -11,13 +11,6 @@
         flex-direction: row;
     }
 }
-/*
-.albumInfo{
-    display: flex;
-    flex-direction: row;
-
-}
-*/
 
 .artistInfoContent{
     display: flex;
@@ -46,6 +39,12 @@
     border-radius: 10px;
     padding: 1em;
     margin: 0.5em;
+
+    cursor: pointer;
+}
+.artistAlbum:hover{
+    background-color: #c0c5ce;
+    color: #333d45;
 }
 .artistAlbumEntry{
     display: flex;
@@ -83,8 +82,16 @@ img{
     height: 30em;
     margin: 30px;
 }
+img.albumImg{
+    width: 100%;
+    height: 300px;
+}
+input{
+    word-wrap: normal;
+}
 
 .save {
+    cursor: pointer;
     background-color: #63937c;
     color: greenyellow;
     border: solid 3px greenyellow;
@@ -95,7 +102,7 @@ img{
     font-size: xx-large;
 }
 .save:hover{
-  background-color: #63b37c;
+    background-color: #63b37c;
 }
 .save:active {
   background-color: greenyellow;
@@ -103,6 +110,7 @@ img{
 }
 
 .cancel{
+    cursor: pointer;
     color: red;
     background-color: #83737c;
     border: solid 3px red;
@@ -118,4 +126,15 @@ img{
 .cancel:active{
     background-color: red;
     color: #83737c;
+}
+
+h1.delete{
+    padding: 5px;
+    cursor: pointer;
+}
+h1.delete:hover{
+    background-color: red;
+}
+h1.delete:active{
+    background-color: darkred;
 }

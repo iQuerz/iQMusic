@@ -11,13 +11,6 @@
         flex-direction: row;
     }
 }
-/*
-.albumInfo{
-    display: flex;
-    flex-direction: row;
-
-}
-*/
 
 .albumInfoContent{
     display: flex;
@@ -85,6 +78,7 @@ img{
 }
 
 .save {
+    cursor: pointer;
     background-color: #63937c;
     color: greenyellow;
     border: solid 3px greenyellow;
@@ -103,6 +97,7 @@ img{
 }
 
 .cancel{
+    cursor: pointer;
     color: red;
     background-color: #83737c;
     border: solid 3px red;
@@ -118,4 +113,15 @@ img{
 .cancel:active{
     background-color: red;
     color: #83737c;
+}
+
+h1{
+    padding: 5px;
+    cursor: pointer;
+}
+h1:hover{
+    background-color: red;
+}
+h1:active{
+    background-color: darkred;
 }
