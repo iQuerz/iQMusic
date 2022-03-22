@@ -1,11 +1,12 @@
 import { Artist } from "./Artist.js";
 import { Album } from "./Album.js";
+import { Concert } from "./Concert.js";
 
 const api = "https://localhost:5001/api/";
 
 var parentDiv = document.querySelector("#parent");
-var divs = ["Albums", "Artists"];
-var albumPage = 1, artistPage = 1;
+var divs = ["Albums", "Artists", "Concerts"];
+var albumPage = 1, artistPage = 1, concertPage = 1;
 
 
 // two divs. one for albums one for artists
@@ -28,8 +29,10 @@ divs.forEach(x => {
 
         if(x == "Albums")
             albumPage = newPage(albumPage - 1);
-        else
+        else if (x == "Artists")
             artistPage = newPage(artistPage - 1);
+        else
+            concertPage = newPage(concertPage - 1);
 
         contentDiv = renderContent(x);
         containerDiv.appendChild(contentDiv);
@@ -47,8 +50,10 @@ divs.forEach(x => {
         contentDiv.textContent = '';
         if(x == "Albums")
             albumPage++;
-        else
+        else if (x == "Artists")
             artistPage++;
+        else
+            concertPage++;
 
         contentDiv = renderContent(x);
         containerDiv.appendChild(contentDiv);
@@ -65,11 +70,16 @@ divs.forEach(x => {
             localStorage.setItem('album', JSON.stringify(a));
             window.open("AlbumView/album.html", "_self");
         }
-        else
+        else if (x == "Artists")
         {
             let a = new Artist(0, "exampleName", "exampleDescription", "https://cdn.discordapp.com/attachments/912736246198046794/955689192627794000/placeholder.jpg",0,1000,9999, "youtube.com", "spotify.com");
             localStorage.setItem('artist', JSON.stringify(a));
             window.open("ArtistView/artist.html", "_self");
+        }
+        else{
+            let c = new Concert(0, "exampleName", "https://cdn.discordapp.com/attachments/912736246198046794/955689192627794000/placeholder.jpg", "date", "https://youtube.com");
+            localStorage.setItem('concert', JSON.stringify(c));
+            window.open("ConcertView/concert.html", "_self");
         }
     })
 
@@ -109,7 +119,7 @@ function renderContent(x){
             })
         })
     }
-    else{
+    else if (x == "Artists"){
         fetch(fetchurl + artistPage)
         .then(response => {
             response.json().then(artists => {
@@ -122,7 +132,18 @@ function renderContent(x){
             })
         })
     }
-    return contentDiv
+    else{
+        fetch(fetchurl + concertPage)
+        .then(response => {
+            response.json().then(concerts => {
+                concerts.forEach(concert => {
+                    let c = new Concert(concert.id, concert.name, concert.image, concert.date, concert.url);
+                    contentDiv.appendChild(c.renderPreview());
+                })
+            })
+        })
+    }
+    return contentDiv;
 }
 
 function newPage(page){

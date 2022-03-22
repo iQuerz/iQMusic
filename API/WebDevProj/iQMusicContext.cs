@@ -13,6 +13,8 @@ namespace WebDevProj
         public DbSet<Album> Albums { get; set; }
         public DbSet<Song> Songs { get; set; }
         public DbSet<FeatureLink> Links { get; set; }
+        public DbSet<Concert> Concerts { get; set; }
+        public DbSet<ConcertLink> CLinks { get; set; }
 
         public iQMusicContext(DbContextOptions options)
             :base(options)

@@ -92,4 +92,27 @@ export class Artist{
         artistDiv.appendChild(artistImg);
         artistDiv.appendChild(artistInfoDiv);
     }
+    renderShortDetails(artistsDiv){
+        let artistDiv = document.createElement("div");
+        artistDiv.classList.add("concertArtist");
+
+        let container = document.createElement("div");
+        container.classList.add("concertArtistEntry");
+
+        let artistImg = document.createElement("img");
+        artistImg.classList.add("artistImg");
+        artistImg.src = this.Image;
+        container.appendChild(artistImg);
+
+        let artistName = document.createElement("h2");
+        artistName.textContent = this.Name;
+        container.appendChild(artistName);
+
+        artistDiv.addEventListener('click', f => {
+            localStorage.setItem('artist', JSON.stringify(this));
+            window.open("../ArtistView/artist.html", "_self");
+        });
+        artistDiv.appendChild(container);
+        artistsDiv.appendChild(artistDiv);
+    }
 }

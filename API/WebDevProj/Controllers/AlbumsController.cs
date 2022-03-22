@@ -49,7 +49,7 @@ namespace WebDevProj.Controllers
             if (skip >= count)
                 skip = count / 20;
 
-            var albums = Context.Albums.Skip(skip).Take(itemsPerPage);
+            var albums = Context.Albums.OrderBy(a => a.Name).Skip(skip).Take(itemsPerPage);
 
             return Ok(albums);
         }

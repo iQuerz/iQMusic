@@ -8,7 +8,7 @@ export class Song{
         this.AlbumID = AlbumID;
     }
 
-    renderDetails(songsDiv, features){
+    renderDetails(songsDiv, api){
         let songDiv = document.createElement("div");
         songDiv.classList.add("albumSong");
 
@@ -52,6 +52,19 @@ export class Song{
         trash.classList.add("fa-solid");
         trash.classList.add("fa-trash-can");
         trash.textContent = " Delete this song";
+        trash.addEventListener('click', async f => {
+            let response = await fetch(api + "Songs/" + this.ID, { method: 'DELETE' });
+            if(response.ok){
+                let data = await response.text();
+                alert(data);
+
+                songDiv.remove();
+            }
+            else{
+                let data = await response.text();
+                alert(data);
+            }
+        })
         songDiv.appendChild(trash);
 
         songsDiv.appendChild(songDiv);
