@@ -28,20 +28,7 @@ namespace WebDevProj.Controllers
             if (album == null)
                 return NotFound($"Could not find the related album. Try with a different ID.");
 
-            var songs = Context.Songs.Where(s => s.AlbumID == AlbumID)
-                .Select(s => new
-                {
-                    Song = s,
-                    Features = Context.Links.Where(l => l.SongID == s.ID)
-                        .Select(l => new
-                        {
-                            Artist = Context.Artists.Where(a => a.ID == l.ArtistID)
-                                .Select(a => new
-                                {
-                                    Name = a.Name
-                                }).FirstOrDefault()
-                        }).ToList()
-                });
+            var songs = Context.Songs.Where(s => s.AlbumID == AlbumID);
 
             return Ok(songs);
         }
@@ -72,7 +59,10 @@ namespace WebDevProj.Controllers
             if (s == null)
                 return NotFound($"The object you are trying to access does not exist. Try with a different ID.");
 
-            s = song;
+            s.Title = song.Title;
+            s.Youtube = song.Youtube;
+            s.Spotify = song.Spotify;
+            s.AlbumID = song.AlbumID;
             await Context.SaveChangesAsync();
             return Ok(s);
         }

@@ -39,7 +39,7 @@ namespace WebDevProj.Controllers
         public async Task<ActionResult> GetArtistsPage(int page = 1)
         {
             if (page < 1)
-                return BadRequest();
+                return BadRequest(); //stranica su prirodni brojevi
 
             const int itemsPerPage = 20;
             int skip = (page - 1) * itemsPerPage;
@@ -51,6 +51,14 @@ namespace WebDevProj.Controllers
             var artists = Context.Artists.Skip(skip).Take(itemsPerPage);
             
             return Ok(artists);
+        }
+
+        [HttpGet]
+        [Route("Name/{name}")]
+        public async Task<ActionResult> GetArtistByName(string name)
+        {
+            var artist = Context.Artists.Where(a => a.Name == name).FirstOrDefault();
+            return Ok(artist);
         }
 
         [HttpPost]
@@ -72,7 +80,10 @@ namespace WebDevProj.Controllers
         [Route("{id}")]
         public async Task<ActionResult> UpdateArtist([FromBody] Artist artist, int id)
         {
-            var a = await Context.Artists.FindAsync(artist.ID);
+            if (artist.ID != id)
+                return BadRequest(); //url & object don't match
+
+            var a = await Context.Artists.FindAsync(id);
             if (a == null)
                 return BadRequest(); //ne postoji
 
@@ -82,11 +93,24 @@ namespace WebDevProj.Controllers
                 if (test != null)
                     return BadRequest(); //ime vec postoji
             }
+            try
+            {
+                a.Name = artist.Name;
+                a.Image = artist.Image;
+                a.Spotify = artist.Spotify;
+                a.Youtube = artist.Youtube;
+                a.StartDate = artist.StartDate;
+                a.EndDate = artist.EndDate;
+                a.Description = artist.Description;
+                a.ArtistType = artist.ArtistType;
+                await Context.SaveChangesAsync();
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, "Server error.\n" + e.Message);
+            }
 
-            a = artist;
-            await Context.SaveChangesAsync();
-
-            return Ok(artist);
+            return Ok(a);
         }
 
         [HttpDelete]
@@ -101,7 +125,17 @@ namespace WebDevProj.Controllers
             if (artist == null)
                 return BadRequest(); //ne postoji
 
+            var albums = Context.Albums.Where(a => a.ArtistID == artist.ID);
+
+            foreach(var album in albums)
+            {
+                var songs = Context.Songs.Where(s => s.AlbumID == album.ID);
+                Context.Songs.RemoveRange(songs);
+            }
+            Context.Albums.RemoveRange(albums);
+
             Context.Artists.Remove(artist);
+            await Context.SaveChangesAsync();
             return Ok("Entity removed succesfully.");
         }
     }

@@ -54,6 +54,14 @@ namespace WebDevProj.Controllers
             return Ok(albums);
         }
 
+        [HttpGet]
+        [Route("artist/{artistID}")]
+        public async Task<ActionResult> GetArtistAlbums(int artistID)
+        {
+            var albums = Context.Albums.Where(a => a.ArtistID == artistID);
+            return Ok(albums);
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateAlbum([FromBody] Album album)
         {
@@ -71,7 +79,7 @@ namespace WebDevProj.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> UpdateArtist([FromBody] Album album, int id)
+        public async Task<ActionResult> UpdateAlbum([FromBody] Album album, int id)
         {
             var a = await Context.Albums.FindAsync(album.ID);
             if (a == null)
@@ -84,10 +92,15 @@ namespace WebDevProj.Controllers
                     return BadRequest(); //ime vec postoji
             }
 
-            a = album;
+            a.Name = album.Name;
+            a.Image = album.Image;
+            a.Spotify = album.Spotify;
+            a.Youtube = album.Youtube;
+            a.Genre = album.Genre;
+            a.Year = album.Year;
+            a.ArtistID = album.ArtistID;
             await Context.SaveChangesAsync();
-
-            return Ok(album);
+            return Ok(a);
         }
 
         [HttpDelete]
@@ -102,7 +115,11 @@ namespace WebDevProj.Controllers
             if (album == null)
                 return BadRequest(); //ne postoji
 
+            var songs = Context.Songs.Where(s => s.AlbumID == album.ID);
+            Context.Songs.RemoveRange(songs);
+
             Context.Albums.Remove(album);
+            await Context.SaveChangesAsync();
             return Ok("Entity removed succesfully.");
         }
     }
